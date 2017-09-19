@@ -15,5 +15,6 @@ void main()
 		PORTB = 0x00;
 		__delay_ms(250);
 		PORTB = 0x30;
+		__delay_ms(250);
 	}
 }
