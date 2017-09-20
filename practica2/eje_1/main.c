@@ -1,6 +1,6 @@
 #include <htc.h>
 
-#define _XTAL_FREQ 8000000
+#define _XTAL_FREQ 1000000
 
 void main()
 {
