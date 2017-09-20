@@ -1,0 +1,15 @@
+funclist
+*.as
+*.cof
+*.hex
+*.hxl
+*.lst
+*.p1
+*.pre
+*.sdb
+*.sym
+.as
+startup.lst
+startup.obj
+startup.rlf
+
