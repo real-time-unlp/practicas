@@ -7,11 +7,11 @@
 UBaseType_t priority[MAX_TASKS] = {1, 1, 1};
 
 static void task(void *args) {
-	const char *title = static_cast<const char *>(args);
+	const char *title = pcTaskGetName(NULL);
 
 	while(1) {
 		Serial.println(title);
-		vTaskDelay(300 / portTICK_PERIOD_MS);
+		vTaskDelay(500 / portTICK_PERIOD_MS);
 	}
 }
 
