@@ -7,14 +7,14 @@
 
 static volatile char input = 0;
 
-SemaphoreHandle_t semaphore[MAX_TASKS] = {
+static SemaphoreHandle_t semaphore[MAX_TASKS] = {
 	xSemaphoreCreateBinary(),
 	xSemaphoreCreateBinary(),
 	xSemaphoreCreateBinary()
 };
-SemaphoreHandle_t ready = xSemaphoreCreateCounting(1, 0);
+static SemaphoreHandle_t ready = xSemaphoreCreateCounting(1, 0);
 
-uint8_t indexArr[MAX_TASKS] = {0, 1, 2};
+static uint8_t indexArr[MAX_TASKS] = {0, 1, 2};
 
 static void task(void *args) {
 	char *title = pcTaskGetName(NULL);
