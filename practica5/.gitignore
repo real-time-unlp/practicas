@@ -2,7 +2,8 @@
 # Prerequisites
 *.d
 main
-
+sensor
+monitor
 # Object files
 *.o
 *.ko

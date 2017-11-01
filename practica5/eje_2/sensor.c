@@ -36,12 +36,12 @@ int main(int argc, char **argv)
 		float temp;
 		long ns;
 		sscanf(line, "%f\t%ld", &temp, &ns);
-		fprintf(stderr, "%f\t%ld\n", temp, ns);
+		// fprintf(stderr, "%f\t%ld\n", temp, ns);
 		wait_ns(ns);
-		write(0, &temp, sizeof temp);
+		write(STDOUT_FILENO, &temp, sizeof temp);
 	}
 
-	fprintf(stderr, "\nTerminado.\n");
+	fprintf(stderr, "\nSensor terminado.\n");
 	free(line);
 	fclose(file);
 	return 0;
