@@ -4,38 +4,43 @@
 #include <semphr.h>
 
 #define MAX_TASKS	3
-#define EXERCISE	a
+
+static volatile char input = 0;
 
 SemaphoreHandle_t semaphore[MAX_TASKS] = {
 	xSemaphoreCreateBinary(),
 	xSemaphoreCreateBinary(),
 	xSemaphoreCreateBinary()
 };
-SemaphoreHandle_t ready = xSemaphoreCreateCounting(1, 1);
+SemaphoreHandle_t ready = xSemaphoreCreateCounting(1, 0);
 
 uint8_t indexArr[MAX_TASKS] = {0, 1, 2};
 
 static void task(void *args) {
-	const char *title = pcTaskGetName(NULL);
+	char *title = pcTaskGetName(NULL);
 	const uint8_t index = *(static_cast<const uint8_t*>(args));
+	title[5] = index + '1';
 
 	while(1) {
 		xSemaphoreTake(semaphore[index], portMAX_DELAY);
 		Serial.println(title);
+		vTaskDelay(1000 / portTICK_PERIOD_MS);
 		xSemaphoreGive(ready);
 	}
 }
 
 static void controllerTask(void *args) {
-	while(1) {
-		#if EXERCISE == a
+	if (input == 'a') {
+		while(1) {
 			xSemaphoreGive(semaphore[0]);
 			xSemaphoreTake(ready, portMAX_DELAY);
 			xSemaphoreGive(semaphore[2]);
 			xSemaphoreTake(ready, portMAX_DELAY);
 			xSemaphoreGive(semaphore[1]);
 			xSemaphoreTake(ready, portMAX_DELAY);
-		#elif EXERCISE == b
+		}
+	} else if(input == 'b') {
+		while(1) {
 			xSemaphoreGive(semaphore[1]);
 			xSemaphoreTake(ready, portMAX_DELAY);
 			xSemaphoreGive(semaphore[1]);
@@ -44,7 +49,9 @@ static void controllerTask(void *args) {
 			xSemaphoreTake(ready, portMAX_DELAY);
 			xSemaphoreGive(semaphore[0]);
 			xSemaphoreTake(ready, portMAX_DELAY);
-		#elif EXERCISE == c
+		}
+	} else if(input == 'c') {
+		while(1) {
 			xSemaphoreGive(semaphore[2]);
 			xSemaphoreTake(ready, portMAX_DELAY);
 			xSemaphoreGive(semaphore[2]);
@@ -55,16 +62,31 @@ static void controllerTask(void *args) {
 			xSemaphoreTake(ready, portMAX_DELAY);
 			xSemaphoreGive(semaphore[1]);
 			xSemaphoreTake(ready, portMAX_DELAY);
-		#endif
+		}
 	}
 }
 
 void setup() {
 	Serial.begin(9600);
+	Serial.println("Seleccione el ejercicio que quiere ejecutar. Puede ser a, b o c");
+
+	while(!input) {
+		while(!Serial.available());
+		input = Serial.read();
+		Serial.println();
+		if (input >= 'a' && input <= 'c') {
+			Serial.print("Se ha seleccionado el ejercicio ");
+			Serial.println(input);
+			Serial.println();
+		} else if (input != 0) {
+			Serial.println("Seleccione un ejercicio valido");
+			input = 0;
+		}
+	}
 
 	xTaskCreate(controllerTask, "Controller task", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 	for (int i = 0; i < MAX_TASKS; i++) {
-		xTaskCreate(task, "Task " + i, configMINIMAL_STACK_SIZE, &indexArr[i], 1, NULL);
+		xTaskCreate(task, "Task  ", configMINIMAL_STACK_SIZE, &indexArr[i], 1, NULL);
 	}
 
 	vTaskStartScheduler();
