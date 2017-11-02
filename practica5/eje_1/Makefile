@@ -1,2 +1,2 @@
 main: main.c
-	cc -std=c99 -D_POSIX_C_SOURCE=199309L -Wall -lrt -lpthread main.c -o main
+	cc -std=c99 -D_POSIX_C_SOURCE=200809 -Wall -lrt -pthread main.c -o main

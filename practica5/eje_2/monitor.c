@@ -20,9 +20,9 @@ void *func_a(void *arg)
 {
 	float incoming;
 	while (read(STDIN_FILENO, &incoming, sizeof(float)) > 0) {
-		write(pipes[WRITE], &incoming, sizeof(float));
 		if (incoming > 90.0)
 			fprintf(stderr, "Mayor a 90C: %f\n", incoming);
+		write(pipes[WRITE], &incoming, sizeof(float));
 	}
 	fprintf(stderr, "Thread A: EOF\n");
 	close(pipes[WRITE]);
@@ -60,8 +60,8 @@ int main()
 
 	param_a.sched_priority = HIGH;
 	pthread_setschedparam(thread_a, SCHED_RR, &param_a);
-	param_a.sched_priority = LOW;
-	pthread_setschedparam(thread_a, SCHED_RR, &param_b);
+	param_b.sched_priority = LOW;
+	pthread_setschedparam(thread_b, SCHED_RR, &param_b);
 
 	if (pthread_join(thread_a, NULL))
 		die();
