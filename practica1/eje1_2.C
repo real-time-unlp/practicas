@@ -41,7 +41,11 @@ int main(int argc, char **argv)
 	n = CLK/freq;
 
 	printf("n: %u\n", n);
-
+    // El valor 34 define:
+    //      No BCD,
+    //      Modo 2: X10 (generador de impulsos)
+    //      Priero de lee (o escribe) el byte menos significativo del contador
+    //      Se selecciona el contador 0
 	outportb(0x43, 0x34);
 	outportb(0x40, 0xFF & n);
 	outportb(0x40, (0xFF00 & n) >> 8);
